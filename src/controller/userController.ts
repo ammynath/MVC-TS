@@ -13,7 +13,8 @@ export const signUpUser = async (req: Request, res: Response): Promise<void> => 
         const findUser = await userModel.findOne({email})
 
         if (findUser) {
-            res.status(409).json({MESSAGE: "Email already exists"})
+            res.status(409).json({message: "Email already exists"})
+            return;
         }
         const hashPasword = await argon2.hash(password)
         const createUser = await userModel.create({
@@ -22,7 +23,7 @@ export const signUpUser = async (req: Request, res: Response): Promise<void> => 
             password: hashPasword
         })
 
-        res.status(201).json({message: "User created successfully", data: createUser})
+        res.status(201).json({success: true, message: "User created successfully", data:createUser})
     } catch (err: any) {
         res.status(500).json({message: " error occured", error: err.message})
         // res.status(500).json({message: " error occured", error: (err as Error).message || err})

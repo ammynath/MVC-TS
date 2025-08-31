@@ -13,9 +13,10 @@ const signUpUser = async (req, res) => {
             res.status(400).json({ message: "Please all fileds are required" });
             return;
         }
-        const findUer = await userModel_1.userModel.findOne({ email });
-        if (findUer) {
-            res.status(409).json({ MESSAGE: "Email already exists" });
+        const findUser = await userModel_1.userModel.findOne({ email });
+        if (findUser) {
+            res.status(409).json({ message: "Email already exists" });
+            return;
         }
         const hashPasword = await argon2_1.default.hash(password);
         const createUser = await userModel_1.userModel.create({
@@ -23,7 +24,7 @@ const signUpUser = async (req, res) => {
             email,
             password: hashPasword
         });
-        res.status(201).json({ message: "User created successfully", data: createUser });
+        res.status(201).json({ success: true, message: "User created successfully", data: createUser });
     }
     catch (err) {
         res.status(500).json({ message: " error occured", error: err.message });
