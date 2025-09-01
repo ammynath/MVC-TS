@@ -56,3 +56,35 @@ export const loginUser = async (req: Request, res: Response): Promise<void> =>{
         res.status(500). json({message: "An error occured", err: err.message})
     }
 }
+
+export const getAuser = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const getAuser = await userModel.findById(req.params.id);
+        if (!getAuser) {
+            res.status(400).json({message: "User not found"})
+            return;
+        }
+        res.status(200).json({message: "User gotten successfully", data: getAuser})
+    } catch (err: any) {
+        res.status(500).json({message: "An error occured", err: err.message})
+    }
+}
+
+export const upDateUser = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const {name, password, email} = req.body as Partial<IUser>;
+        const upDateUser = await userModel.findByIdAndUpdate(req.params.id,
+         {name, email, password},
+         {new: true}
+        
+        );
+        if (!upDateUser) {
+            res.status(404).json({message: "User not found"})
+            return;
+        }
+        res.status(200).json({message: "User update successfully", upDateUser})
+       
+    } catch (err: any) {
+        res.status(500).json({message: "An error occured", err: err.message})
+    }
+}
